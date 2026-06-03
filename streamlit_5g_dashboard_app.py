@@ -80,7 +80,7 @@ months = sorted(
     .tolist())
 selected_month = st.sidebar.selectbox("Select declaration month", options=months, index=months.index(max(months)))
 
-population = st.sidebar.number_input("Enter the current population ('000)", placeholder="34,334.4", step =0.1, format ="%.1f")
+population = st.sidebar.number_input("Enter the current population ('000)", placeholder="34,374.1", step =0.1, format ="%.1f")
 
 data5GDB = filter_period(data5G, selected_month, selected_year)
 
