@@ -89,13 +89,12 @@ if data5GDB.empty:
     st.stop()
 
 # Previous month logic
-if selected_month == 1:
-    prev_month = 12
-    prev_year = selected_year - 1
-else:
-    prev_month = selected_month - 1
-    prev_year = selected_year
+def prev_check(selected_month, selected_year):
+    if selected_month == 1:
+        return 12, selected_year - 1
+    return selected_month - 1, selected_year
 
+prev_month, prev_year = prev_check(selected_month, selected_year)
 prev_data = data5G[
     (data5G['DECLARATION_MONTH'] == prev_month) &
     (data5G['DECLARATION_YEAR'] == prev_year)
@@ -142,6 +141,9 @@ latest_by_sp = (
     .agg(TOTAL_SUBS=('TOTAL_SUBS', 'sum'))
     .sort_values('TOTAL_SUBS', ascending=False)
 )
+
+penrate_by_sp = latest_by_sp.copy()
+penrate_by_sp['PENETRATION RATE (%)'] = penrate_by_sp['TOTAL_SUBS'] / (population * 1000) * 100
 
 latest_by_state = (
     data5GDB.groupby('State', as_index=False)
@@ -192,7 +194,8 @@ st.subheader("Overview")
 
 col1, col2 = st.columns(2)
 
-table_sp = latest_by_sp.copy()
+table_sp = penrate_by_sp[['SERVICE_PROVIDER', 'TOTAL_SUBS', 'PENETRATION RATE (%)']].copy()
+table_sp['PENETRATION RATE (%)'] = table_sp['PENETRATION RATE (%)'].map('{:,.2f}%'.format)
 table_sp['TOTAL_SUBS'] = table_sp['TOTAL_SUBS'].map('{:,.0f}'.format)
 col1.markdown(f"**Subscriptions by Service Provider ({selected_month}/{selected_year})**")
 col1.dataframe(table_sp, use_container_width=True, hide_index=True)
