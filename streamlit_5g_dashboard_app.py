@@ -55,7 +55,7 @@ def filter_period(df: pd.DataFrame, selected_month: int, selected_year: int) -> 
     ].copy()
 
 
-st.title("5G Submission Dashboard")
+st.title("5G Dashboard")
 st.subheader("5G Analysis & Monitoring Dashboard")
 
 uploaded_file = st.sidebar.file_uploader("Upload raw 5G CSV", type=["csv"])
